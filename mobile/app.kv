@@ -1,0 +1,94 @@
+Manager:
+    Login:
+        name: "login"
+    Chat:
+        name: "chat"
+
+
+<Login>:
+    MDFloatLayout:
+        orientation:"vertical"
+        MDLabel:
+            halign: "center"
+            pos_hint:{"center_y":0.8}
+            text: "PYCHAT"
+            font_style:"Button"
+            font_size: "48dp"
+        MDIcon:
+            icon: "language-python"
+            pos_hint:{"center_y":0.7}
+            halign: "center"
+            font_size: "48dp"
+        
+        MDLabel:
+            id:error
+            halign: "center"
+            pos_hint:{"center_y":0.6}
+            text: ""
+            theme_text_color: "Error"
+                    
+        MDTextField:
+            id: name
+            pos_hint:{"center_y":.5,"center_x":0.5}
+            size_hint_x: .5
+            hint_text: "Nome"
+        MDTextField:
+            id: outro
+            pos_hint:{"center_y":.4,"center_x":0.5}
+            size_hint_x: .5
+            hint_text: "outro"
+        MDFillRoundFlatButton:
+            pos_hint:{"center_y":.2,"center_x":0.5}
+            font_size: "18sp"
+            text: "        Conecte        "
+            on_release: root.login()
+
+<Mensagem>: 
+    adaptive_height: True
+    orientation: "vertical"
+    padding: 10
+    canvas:
+        Color:
+            rgba: root.color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [8, 8, 8, 8]
+
+    
+    MDLabel:
+        id: user
+        text: ""
+        size_hint_y: None
+        size: self.texture_size
+        font_style: "H6"
+
+
+    MDLabel:
+        id: msg
+        text: ""
+        size_hint_y: None
+        size: self.texture_size
+
+<Chat>:
+    BoxLayout:
+        orientation: "vertical"
+        MDToolbar:
+            title: "PYCHAT"
+            right_action_items: [["logout", lambda x:root.on_ws_close()]]
+        ScrollView:
+            MDList:
+                spacing: 10
+                padding:20
+
+                id: box
+
+        MDBoxLayout:
+            adaptive_height: True
+            spacing: 30
+            padding: 25
+            MDTextFieldRound:
+                id: message
+            MDFillRoundFlatButton
+                text: "enviar"
+                on_release: root.send_message()

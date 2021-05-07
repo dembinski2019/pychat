@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+    </head>
+    <body>
+        <h1>WebSocket Chat</h1>
+        <h2 id="eu"></h2>
+        conversando com:<h2 id="outro"></h2>
+            <label>Eu: <input type="text" id="user" autocomplete="off" value="foo"/></label>
+            <label>Alvo: <input type="text" id="alvo" autocomplete="off" value="foo"/></label>
+            <button id="botao"onclick="connect(event)">Connect</button>
+            <hr>
+        <form action="" onsubmit="sendMessage(event)">
+            <label>Message: <input type="text" id="messageText" autocomplete="off"/></label>
+            <button>Send</button>
+        </form>
+        <ul id='messages'>
+        </ul>
+        <script>
+        var ws = null;
+            function connect(event) {
+                var user = document.getElementById("user")
+                var alvo = document.getElementById("alvo")
+                document.getElementById("eu").textContent = user.value
+                document.getElementById("outro").textContent = alvo.value
+                ws = new WebSocket("ws://localhost:8000/ws/" + user.value+ "/" +alvo.value)
+                ws.onmessage = function(event) {
+                    var messages = document.getElementById('messages')
+                    data = JSON.parse(event.data)
+                    var message_user = document.createElement('li')
+                    var message_msg = document.createElement('li')
+                    var datinha = event.data
+                    var user = document.createTextNode(data.user)
+                    var msg = document.createTextNode(data.msg)
+                    message_user.appendChild(user)
+                    message_msg.appendChild(msg)
+                    messages.appendChild(message_user)
+                    messages.appendChild(message_msg)
+                };
+                event.preventDefault()
+            }
+            function sendMessage(event) {
+                var message_user = document.createElement('li')
+                var message_msg = document.createElement('li')
+                var input = document.getElementById("messageText")
+                ws.send(input.value)
+
+                var user = document.createTextNode(document.getElementById("user").value)
+                var msg = document.createTextNode(input.value)
+
+                message_user.appendChild(user)
+                message_msg.appendChild(msg)
+                messages.appendChild(message_user)
+                messages.appendChild(message_msg)
+
+                input.value = ''
+                event.preventDefault()
+            }
+        </script>
+    </body>
+</html>
